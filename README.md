@@ -29,13 +29,13 @@ This project, roger-skyline-1 let you install a Virtual Machine, discover the ba
 # Network and Security Part
 
 ## 1. Virtual Machine Installation <a id="VMinstall"></a>
-
+-----------
 ## 2. OS Installation Process <a id="OSinstallation"></a>
 
 1. CD link: https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-10.5.0-amd64-xfce-CD-1.iso
 2. I choose `tasmia` as hostname
 3. I setup the root password (1234)
-4. I create a new non-root user called `tasmia` and his password.
+4. I create a new non-root user called `rahman` and set a password.
 5. Partitioning (Manual, Select the SCSI partition(yes),select, create new, 4.2 GB, Primary,
 6. Beginning, finish. Change bootable on, use as ext4,  Make a new partition, Logical, enter, enter. Change to swap, Finish and write changes).
 7. I skiped the mirror networking and did it manually letter.
@@ -43,18 +43,18 @@ This project, roger-skyline-1 let you install a Virtual Machine, discover the ba
 9. I didn't participate in survey
 10. Finally I've choose GRUB on the master boot record
 11. done
-12. Finally, i did mirror networking manually (add update sources to /etc/apt/sources.list https://debgen.simplylinux.ch/)
+12. Finally, i did mirror networking manually (add update sources to /etc/apt/sources.list (network mirroring link: https://debgen.simplylinux.ch/)
 13. Install all the missing package, like SSH, SUDO.
-
+-----------
 ## 3. Install Depedency <a id="depedency"></a>
 
-As root:
+1. As root, install all the needed dependency for this project:
 
 ```bash
 apt-get update -y && apt-get upgrade -y
-
 apt-get install sudo vim ufw portsentry fail2ban apache2 mailutils -y
 ```
+-----------
 ## 4. Configure SUDO <a id="sudo"></a>
 
 You must create a non-root user to connect to the machine and work.
@@ -66,8 +66,8 @@ You must create a non-root user to connect to the machine and work.
 
 TEST: cat /etc/sudoers
 
-OUTPUT: 
-```console
+OUTPUT will look like below: 
+```
 #
 # This file MUST be edited with the 'visudo' command as root.
 #
@@ -99,7 +99,7 @@ tasmia  ALL=(ALL:ALL) NOPASSWD:ALL
 
 #includedir /etc/sudoers.d
 ```
-
+-----------
 ## 5. Setup a static IP <a id="staticIP"></a>
 
 1. First, we have to edit the file `/etc/network/interfaces` and setup our primary network
@@ -107,7 +107,7 @@ tasmia  ALL=(ALL:ALL) NOPASSWD:ALL
 2. Now we have to configure this network with a static ip, to do that properly, we will place the network info inside `etc/network/interfaces` & output will look like below after edit
 
 OUTPUT: `cat etc/network/interfaces`
-```console
+```
 source /etc/network/interfaces.d/*
 
 #The loopback Network interface
@@ -131,7 +131,7 @@ sudo service networking restart
 ```bash
 ip addr
 ```
-### 💡 ***NOTE***
+## 💡 ***NOTE***
 
 	What is a /30 bit subnet mask?
 	I am sure you are used to seeing subnet masks that look like 255.255.255.0. This is a /24 subnet mask in “slash notation”. 
@@ -145,14 +145,14 @@ ip addr
 	So what is a /30 bit mask? A /30 bit mask would be 30 one’s, leaving just 2 zero’s that could be used for host addressing. 
 	If you apply the hosts formula, you get 2^2 = 4 – 2 = 2 useable IP addresses. 
 
-## 6. Change SSH default Port
+## 6. ***Change SSH default Port***
 
 1. Go back to root and use any text editor to edit the sshd configuration file
    sudo vim /etc/ssh/sshd_config
 2. Change the port number as per your wish
    My port: 50683
 
-### 💡 ***NOTE***
+## 💡 ***NOTE***
 
 	Change line "Port 22" to "Port 50683" and if this line has "#" take it away
 	Port numbers are assigned in various ways, based on three ranges: System Ports (0-1023) this is forbidden to use, User Ports (1024-49151) this should be avoided as well, and the Dynamic and/or Private Ports (49152-65535) this range can be used;
@@ -162,6 +162,7 @@ ip addr
    sudo service sshd restart or sudo reboot
 4. Now we can connect with the host terminal with ssh and port number
    command: ssh tasmia@10.11.199.12 -p 50683
+-----------
 
 ## 7. Setup SSH access with publickeys
 
@@ -178,18 +179,19 @@ This command will generate 2 files `id_rsa` and `id_rsa.pub`
 - **id_rsa**:  Our private key, should be keep safely, She can be crypted with a password.
 - **id_rsa.pub** Our private key, you have to transfer this one to the server.
 
-Source: Source: https://www.linode.com/docs/security/authentication/use-public-key-authentication-with-ssh/#connect-to-the-remote-server
+## 💡 ***SOURCES:*** 
+https://www.linode.com/docs/security/authentication/use-public-key-authentication-with-ssh/#connect-to-the-remote-server
 
 2. To do that we can use the `ssh-copy-id` command
 
-```bash
+```
 ssh-copy-id -i /User/trahman/.ssh/id_rsa.pub tasmia@10.11.199.12 -p 50683
 ```
 
 The key is automatically added in `~/.ssh/authorized_keys` on the server
 Test: go to VM and use `cat /tasmia/.ssh/authorized_keys` to check
 
-> If you no longer want to have type the key password you can setup a SSH Agent with `ssh-add`
+> If you no longer want to type the key password you can setup a SSH Agent with `ssh-add`
 
 3. Edit the `sshd_config` file `/etc/ssh/sshd.config` to remove root login permit, password authentification 
 
@@ -198,23 +200,24 @@ sudo vim /etc/ssh/sshd.conf
 ```
 
 - Edit line 32 like: `PermitRootLogin no`
-- Edit line 36 like: `PubkeyAuthentication no`
+- Edit line 36 like: `PubkeyAuthentication yes`
 - Edit line 56 like `PasswordAuthentication no`
 > Don't forget to delete de **#** at the beginning of each line
 
 4. We need to restart the SSH daemon service
-```bash
+```
 sudo service sshd restart
 ```
+-----------
 ## 8. Setup Firewall with UFW. <a id="ufw"></a>
 
 1. Make sure ufw is enable: if it disable make sure to turn ON.
-```bash
+```
 sudo ufw status
 ```
  if not we can start the service with
  
- ```bash
+ ```
  sudo ufw enable
  sudo ufw default reject incoming
  sudo ufw default allow outgoing
@@ -228,13 +231,15 @@ sudo ufw status
 - HTTPS :	`sudo ufw allow 443`
  ```
 
-### Sources:
+## 💡 ***SOURCES:*** 
 	https://www.digitalocean.com/community/tutorials/how-to-setup-a-firewall-with-ufw-on-an-ubuntu-and-debian-cloud-server
 	https://www.cyberciti.biz/faq/howto-limiting-ssh-connections-with-ufw-on-ubuntu-debian/
 
-⚡️ **Testing**
+-----------
+## ⚡️ ***TESTING***
 
 	sudo ufw status verbose : see the all firewal rules
+-----------
 
 ## 9. Setup DOS protection with fail2ban. <a id="fail2ban"></a>
 
@@ -307,7 +312,7 @@ sudo service fail2ban restart
 	7. or iptables --list | head ::::to check if its baned or not
 	8. 0r sudo fail2ban-client status sshd :::: to check ssh banned actions
 	9. fail2ban-client set YOURJAILNAMEHERE unbanip IPADDRESSHERE :To unban yourself
-
+-----------
 ## 10. Setting up Protection against port scans. <a id="scanSecure"></a>
 
 1. First we need to install the nmap tool with
@@ -360,6 +365,7 @@ sudo service portsentry status
 	4. iptables -D INPUT 1
 	6. service restart portsentry
 	7. check open ports and listened ports with :lsof -i -P
+-----------
 
 ## 11. Stop the services we don’t need <a id="stopServices"></a>
 
@@ -372,7 +378,7 @@ sudo systemctl disable apt-daily.timer
 sudo systemctl disable apt-daily-upgrade.timer
 sudo systemctl disable syslog.service
 ```
-
+-----------
 ⚡️ **Testing the services we don't need**
 
 - [x] `sudo systemctl list-unit-files --type service | grep enabled`
