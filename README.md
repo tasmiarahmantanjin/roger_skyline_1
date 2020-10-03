@@ -1,5 +1,5 @@
-# Roger-skyline-1
-This project, roger-skyline-1 let you install a Virtual Machine, discover the basics about system and network administration as well as a lots of services used on a server machine.
+# roger-skyline-1
+This project, roger-skyline-1 let you install a Virtual Machine, discover the basics about SysAdmin and network administration as well as a lots of services used on a server machine. The main aim of this project is to familiarize us with the work of a sysadmin. I had to configure a linux distribution with some basics services like OpenSSH, Fail2Ban, a web server (apache2) etc..
 
 ## Summary <a id="summary"></a>
 
@@ -20,22 +20,29 @@ This project, roger-skyline-1 let you install a Virtual Machine, discover the ba
 	- [9. Setup DOS protection with fail2ban. <a id="fail2ban"></a>](#9-setup-dos-protection-with-fail2ban-)
 		- [💡 ***NOTE***](#-note-2)
 	- [10. Setting up Protection against port scans. <a id="scanSecure"></a>](#10-setting-up-protection-against-port-scans-)
+		- [💡 ***SOURCES***](#-sources)
 		- [💡 ***NOTE***](#-note-3)
 	- [11. Stop the services we don’t need <a id="stopServices"></a>](#11-stop-the-services-we-dont-need-)
+		- [💡 ***RESOURCES***](#-resources)
 	- [12. Script to update all the packages <a id="updateApt"></a>](#12-script-to-update-all-the-packages-)
 		- [💡 ***NOTE***](#-note-4)
-	- [13 Making a script to warn of all crontab edits](#13-making-a-script-to-warn-of-all-crontab-edits)
+	- [13. Script that monitor all changes in /etc/crontab file](#13-script-that-monitor-all-changes-in-etccrontab-file)
+- [Web Part](#web-part)
+		- [💡 ***RESOURCES***](#-resources-1)
+	- [1. Creating /var/www/html/index.html file](#1-creating-varwwwhtmlindexhtml-file)
+	- [2. Creating SSL CERTIFICATE](#2-creating-ssl-certificate)
+		- [💡 ***RESOURCES***](#-resources-2)
 
 # Network and Security Part
 
 ## 1. Virtual Machine Installation <a id="VMinstall"></a>
------------
+
 ## 2. OS Installation Process <a id="OSinstallation"></a>
 
 1. CD link: https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-10.5.0-amd64-xfce-CD-1.iso
 2. I choose `tasmia` as hostname
 3. I setup the root password (1234)
-4. I create a new non-root user called `rahman` and set a password.
+4. I create a new non-root user called `tasmia` and his password.
 5. Partitioning (Manual, Select the SCSI partition(yes),select, create new, 4.2 GB, Primary,
 6. Beginning, finish. Change bootable on, use as ext4,  Make a new partition, Logical, enter, enter. Change to swap, Finish and write changes).
 7. I skiped the mirror networking and did it manually letter.
@@ -43,18 +50,18 @@ This project, roger-skyline-1 let you install a Virtual Machine, discover the ba
 9. I didn't participate in survey
 10. Finally I've choose GRUB on the master boot record
 11. done
-12. Finally, i did mirror networking manually (add update sources to /etc/apt/sources.list (network mirroring link: https://debgen.simplylinux.ch/)
+12. Finally, i did mirror networking manually (add update sources to /etc/apt/sources.list https://debgen.simplylinux.ch/)
 13. Install all the missing package, like SSH, SUDO.
------------
+
 ## 3. Install Depedency <a id="depedency"></a>
 
-1. As root, install all the needed dependency for this project:
+As root:
 
 ```bash
 apt-get update -y && apt-get upgrade -y
+
 apt-get install sudo vim ufw portsentry fail2ban apache2 mailutils -y
 ```
------------
 ## 4. Configure SUDO <a id="sudo"></a>
 
 You must create a non-root user to connect to the machine and work.
@@ -66,8 +73,8 @@ You must create a non-root user to connect to the machine and work.
 
 TEST: cat /etc/sudoers
 
-OUTPUT will look like below: 
-```
+OUTPUT: 
+```console
 #
 # This file MUST be edited with the 'visudo' command as root.
 #
@@ -99,7 +106,7 @@ tasmia  ALL=(ALL:ALL) NOPASSWD:ALL
 
 #includedir /etc/sudoers.d
 ```
------------
+
 ## 5. Setup a static IP <a id="staticIP"></a>
 
 1. First, we have to edit the file `/etc/network/interfaces` and setup our primary network
@@ -123,15 +130,17 @@ iface enp0s3 inet static
 ```
 3. You can now restart the network service to make changes effective
 
-```bash
+```
 sudo service networking restart
+if network is down: 
+sudo ifdown enp0s3 && ifup enp0s3 (to restart network) ::: inside DEBIAN
 ```
 4. You can check the result with the following command:
 
-```bash
+```
 ip addr
 ```
-## 💡 ***NOTE***
+### 💡 ***NOTE***
 
 	What is a /30 bit subnet mask?
 	I am sure you are used to seeing subnet masks that look like 255.255.255.0. This is a /24 subnet mask in “slash notation”. 
@@ -145,24 +154,23 @@ ip addr
 	So what is a /30 bit mask? A /30 bit mask would be 30 one’s, leaving just 2 zero’s that could be used for host addressing. 
 	If you apply the hosts formula, you get 2^2 = 4 – 2 = 2 useable IP addresses. 
 
-## 6. ***Change SSH default Port***
+## 6. Change SSH default Port (50683)
 
 1. Go back to root and use any text editor to edit the sshd configuration file
    sudo vim /etc/ssh/sshd_config
-2. Change the port number as per your wish
+2. Change the port number as per your wis
    My port: 50683
 
-## 💡 ***NOTE***
+### 💡 ***NOTE***
 
 	Change line "Port 22" to "Port 50683" and if this line has "#" take it away
 	Port numbers are assigned in various ways, based on three ranges: System Ports (0-1023) this is forbidden to use, User Ports (1024-49151) this should be avoided as well, and the Dynamic and/or Private Ports (49152-65535) this range can be used;
-	available information here: https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml
+	<!-- available information here: https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml -->
 
 3. You can now restart the network service to make changes effective
    sudo service sshd restart or sudo reboot
 4. Now we can connect with the host terminal with ssh and port number
    command: ssh tasmia@10.11.199.12 -p 50683
------------
 
 ## 7. Setup SSH access with publickeys
 
@@ -171,7 +179,7 @@ ip addr
 
 3. First we have to generate a public/private rsa key pair, on the host machine (Mac OS X in my case).
 
-```bash
+```
 ssh-keygen -t rsa
 ```
 This command will generate 2 files `id_rsa` and `id_rsa.pub`
@@ -179,23 +187,22 @@ This command will generate 2 files `id_rsa` and `id_rsa.pub`
 - **id_rsa**:  Our private key, should be keep safely, She can be crypted with a password.
 - **id_rsa.pub** Our private key, you have to transfer this one to the server.
 
-## 💡 ***SOURCES:*** 
-https://www.linode.com/docs/security/authentication/use-public-key-authentication-with-ssh/#connect-to-the-remote-server
+### Sources: https://www.linode.com/docs/security/authentication/use-public-key-authentication-with-ssh/#connect-to-the-remote-server
 
 2. To do that we can use the `ssh-copy-id` command
 
-```
+```bash
 ssh-copy-id -i /User/trahman/.ssh/id_rsa.pub tasmia@10.11.199.12 -p 50683
 ```
 
 The key is automatically added in `~/.ssh/authorized_keys` on the server
 Test: go to VM and use `cat /tasmia/.ssh/authorized_keys` to check
 
-> If you no longer want to type the key password you can setup a SSH Agent with `ssh-add`
+> If you no longer want to have type the key password you can setup a SSH Agent with `ssh-add`
 
-3. Edit the `sshd_config` file `/etc/ssh/sshd.config` to remove root login permit, password authentification 
+3. Edit the `sshd_config` file `/etc/ssh/sshd_config` to remove root login permit, password authentification 
 
-```bash
+```
 sudo vim /etc/ssh/sshd.conf
 ```
 
@@ -208,16 +215,15 @@ sudo vim /etc/ssh/sshd.conf
 ```
 sudo service sshd restart
 ```
------------
 ## 8. Setup Firewall with UFW. <a id="ufw"></a>
 
 1. Make sure ufw is enable: if it disable make sure to turn ON.
-```
+```bash
 sudo ufw status
 ```
  if not we can start the service with
  
- ```
+ ```bash
  sudo ufw enable
  sudo ufw default reject incoming
  sudo ufw default allow outgoing
@@ -231,22 +237,20 @@ sudo ufw status
 - HTTPS :	`sudo ufw allow 443`
  ```
 
-## 💡 ***SOURCES:*** 
+### Sources:
 	https://www.digitalocean.com/community/tutorials/how-to-setup-a-firewall-with-ufw-on-an-ubuntu-and-debian-cloud-server
 	https://www.cyberciti.biz/faq/howto-limiting-ssh-connections-with-ufw-on-ubuntu-debian/
 
------------
-## ⚡️ ***TESTING***
+⚡️ **Testing**
 
 	sudo ufw status verbose : see the all firewal rules
------------
 
 ## 9. Setup DOS protection with fail2ban. <a id="fail2ban"></a>
 
 1. Check the current status
 
 ```
-sudo service fail2ban status &&
+sudo service fail2ban status
 sudo cat /etc/fail2ban/jail.local
 ```
 2. Go to sudo vim /etc/fail2ban/jail.local and add following configurtion (add inside jail.loacl file)
@@ -269,7 +273,7 @@ logpath = /var/log/apache2/access.log
 maxretry = 300
 findtime = 300
 bantime = 600
-action = iptables[name=HTTP, port=http, protocol=tcp]
+action = iptables-multiport[name=ReqLimit, port="http,https", protocol=tcp]
 ```
 3. Add regex rules to http-get-dos by creating following file (Add http-get-dos filter)
 
@@ -310,9 +314,9 @@ sudo service fail2ban restart
 	5. python slowloris.py 10.11.199.12 (in the MAC TERMINAL)
 	6. Check fail2ban.log that ip is banned from:  sudo tail -F /var/log/fail2ban.log
 	7. or iptables --list | head ::::to check if its baned or not
-	8. 0r sudo fail2ban-client status sshd :::: to check ssh banned actions
-	9. fail2ban-client set YOURJAILNAMEHERE unbanip IPADDRESSHERE :To unban yourself
------------
+	8. 0r sudo fail2ban-client status sshd ::: to check ssh banned actions
+	9. fail2ban-client set http-get-dos unbanip 10.11.5.18 :To unban yourself
+
 ## 10. Setting up Protection against port scans. <a id="scanSecure"></a>
 
 1. First we need to install the nmap tool with
@@ -349,6 +353,8 @@ BLOCK_TCP="1"
 sudo service portsentry restart
 sudo service portsentry status
 ```
+### 💡 ***SOURCES***
+	https://en-wiki.ikoula.com/en/To_protect_against_the_scan_of_ports_with_portsentry
 
 ### 💡 ***NOTE***
 
@@ -359,62 +365,73 @@ sudo service portsentry status
 
 	1. To simulate the portscan, use nmap:
 	2. In the host machine:
-		a. Download nmap: brew install nmap
+		a. Download nmap: sudo apt-get install nmap
 		b. Launch the scan: nmap 10.11.199.12. Nothing should happen.
-	3. In the the VM, iptables --list | head should show your IP address is banned.
+	3. In the the VM, iptables --list | head :should show your IP address is banned.
 	4. iptables -D INPUT 1
 	6. service restart portsentry
-	7. check open ports and listened ports with :lsof -i -P
------------
+	7. check open ports and listened ports with :lsof -i -P -n | grep "LISTEN" (Check during Evaluation)
 
 ## 11. Stop the services we don’t need <a id="stopServices"></a>
 
 1. To check all active processes: `systemctl list-units --type service --all`
 
-```Service we need to disable
+```SERVICE WE DON'T NEED
 sudo systemctl disable console-setup.service
 sudo systemctl disable keyboard-setup.service
 sudo systemctl disable apt-daily.timer
 sudo systemctl disable apt-daily-upgrade.timer
 sudo systemctl disable syslog.service
 ```
------------
-⚡️ **Testing the services we don't need**
 
-- [x] `sudo systemctl list-unit-files --type service | grep enabled`
-- [x] Use `service --status-all` to list services. A '+' signifies the service is running, a '-' that it is stopped. For another list of services with their status and information about what they do, use `systemctl list-units | grep service`
-- [x] The evaluation also requires that docker, vagrant, traefik, etc. are not used. You can check that they aren't with the command `apt search <docker/vagrant/...> | grep <docker/vagrant/...>`: if it was installed, the flag '[installed]' should appear next to the name of the package.
+### 💡 ***RESOURCES***
+	https://www.digitalocean.com/community/tutorials/how-to-use-systemctl-to-manage-systemd-services-and-units
+
+⚡️ **TESTING**
+
+	1. `sudo systemctl list-unit-files --type service | grep enabled`
+	2. Use `service --status-all` to list services. A '+' signifies the service is running, a '-' that it is stopped. For another list of services with their status and information about what they do, use `systemctl list-units | grep service`
+	3. The evaluation also requires that docker, vagrant, traefik, etc. are not used. You can check that they aren't with the command `apt search <docker/vagrant/...> | grep <docker/vagrant/...>` :if it was installed, the flag '[installed]' should appear next to the name of the package.
 
 -----------
 ## 12. Script to update all the packages <a id="updateApt"></a>
 
-1. Create `update_script.sh` file with `sudo vim /root/scripts/update_script.sh` & insert the following command inside the file
+1. First Create log file named "update_script.log"
+```
+sudo touch /var/log/update_script.log
+sudo chmod 755 /var/log/update_script.log
+```
+2. Create a 'update.sh' file in the root folder && insert the following command inside the "update.sh" file
 
-```bash
+```
 #!/bin/bash
-echo "sudo apt-get update -y >> /var/log/update_script.log" >> ~/update.sh
-echo "sudo apt-get upgrade -y >> /var/log/update_script.log" >> ~/update.sh
+printf "\n" >> /var/log/update_script.log
+date >> /var/log/update_script.log
+
+sudo apt-get update -y >> /var/log/update_script.log
+sudo apt-get upgrade -y >> /var/log/update_script.log
 ```
 2. Change the file permission
 ```
-sudo chmod 755 /root/scripts/update_script.sh
+sudo chmod 755 update.sh
 ```
 3. Make root be the owner for automated execution:
 ```
-sudo chown root /root/scripts/update_script.sh
+sudo chown root update.sh
 ```
 4. To automate execution, we must edit the crontab file & Add the task to cron (for scheduling)
-```bash
+```
 sudo crontab -e
 ```
 5.  Write the file following lines in crontab file
 
-```bash
-SHELL=/bin/bash
-PATH=/sbin:/bin:/usr/sbin:/usr/bin
-
+```
 @reboot sudo ~/update.sh (for running it at boot)
-0 4 * * 7 sudo ~/update.sh (for running it once a week, e.g. Sunday, at 4am)
+0 4 * * 0 sudo ~/update.sh (for running it once a week, e.g. Sunday, at 4am)
+```
+1. Enable cron
+```
+sudo systemctl enable cron
 ```
 -------
 ### 💡 ***NOTE***
@@ -428,15 +445,85 @@ PATH=/sbin:/bin:/usr/sbin:/usr/bin
 			| | --------- Day of month (1 - 31)
 			| ----------- Hour (0 - 23)
 			------------- Minute (0 - 59)
-
 -------
 
-⚡️ **Testing the scrips**
+## 13. Script that monitor all changes in /etc/crontab file
 
-- [x] sudo cat /usr/local/sbin/update.sh
-- [x] sudo cat /usr/local/sbin/change2crontab.sh
-- [x] The **/var/log/update_script.log** should have a log of the boot at the begining of the evaluation. You can also execute the script and check that a log was added at the end of the file.
-- [x] For the crontab checker :
+1. Install mail:
+
+```
+sudo apt install mailutils
+```
+2. Create a script named crontab_monitor.sh in the root
+
+```
+sudo vim /root/crontab_monitor.sh
+```
+3. Add the following script to crontab_monitor.sh file
+
+```
+#!/bin/bash
+
+FILE="/home/tasmia/crontab_monitor"
+FILE_TO_WATCH="/etc/crontab"
+MD5VALUE=$(sudo md5sum $FILE_TO_WATCH)
+
+if [ ! -f $FILE ]
+then
+         echo "$MD5VALUE" > $FILE
+         exit 0;
+fi;
+        echo "$MD5VALUE"
+        cat $FILE
+
+if [ "$MD5VALUE" != "$(cat $FILE)" ];
+        then
+        echo "$MD5VALUE" > $FILE
+        echo "$FILE_TO_WATCH has been modified ! '*_*" |  mail -s "$FILE_TO_WATCH modified !" root
+fi;
+```
+
+4. Add the task to:
+```
+crontab -e
+```
+5. Edit crontab by adding the following line:
+
+```
+SHELL=/bin/bash
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+@reboot sudo /root/update.sh
+0 4 * * 0 sudo /root/update.sh
+0 0 * * * sudo /root/cron_monitor.sh
+```
+6. Make sure we have correct rights
+```
+sudo chmod 755 crontab_monitor.sh
+sudo chmod 755 update.sh
+// sudo chown tasmia /var/mail/tasmia
+```
+7. Sending mail to root:
+
+```
+1. First, create a **new_user**
+2. Go to: **vim /etc/aliases**
+3. Change the last_line of: **/etc/aliases** and change to: root: **new_user**
+4. Then, you will see mail to **new_user** by: mail -u new_user
+5. Redirect the mail from **new_user** to **root**
+6. rm /var/spool/mail/root :before creating soft_link
+7. ln -s /var/spool/mail/new_user /var/spool/mail/root :For creating soft_link
+8. Add: anything to /etc/crontab file
+9. bash cron_monitor.sh
+10. mail -u root
+11. Congratulations: You have a new mail in root
+```
+⚡️ **Testing the scrips and mail**
+
+	1. sudo cat ~/update.sh
+	2. sudo cat ~/crontab_monitor.sh
+	3. The **/var/log/update_script.log** should have a log of the boot at the begining of the evaluation. You can also execute the script and check that a log was added at the end of the file.
+	4. For the crontab checker :
     * Execute the script
         + If you kept the alias and are logged in as <username>, `mail` should tell you `No mail for <username>
         + If you kept the alias and are logged in as someone else, **/var/mail/<username>** should be empty
@@ -444,4 +531,106 @@ PATH=/sbin:/bin:/usr/sbin:/usr/bin
     * Edit **/etc/crontab** and execute the script. Now the same method as before should tell you that there is mail.
 
 -------
-## 13 Making a script to warn of all crontab edits
+
+# Web Part
+
+### 💡 ***RESOURCES***
+
+	1. https://security.stackexchange.com/questions/112768/why-are-self-signed-certificates-not-trusted-and-is-there-a-way-to-make-them-tru
+	
+	2. 
+
+## 1. Creating /var/www/html/index.html file
+
+	1. In order to see status of the apache2 web server, type following command
+			sudo systemctl status apache2
+ 	2. in your (MAC) browser type your static_ip:
+			10.11.199.12
+	3. If your ip doesn't work then restart apache server
+			sudo systemctl restart apache2
+	4. if apache2 server works fine then type
+			sudo vim /var/www/html/index.html
+	5. it will open index.html, now you can edit this .html file based on your webpage requirement.
+
+## 2. Creating SSL CERTIFICATE
+
+1. sudo mkdir -p /etc/ssl/localcerts
+2. sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -out /etc/ssl/localcerts/apache.pem -keyout /etc/ssl/localcerts/apache.key
+3. sudo ls -la /etc/ssl/localcerts/
+4. sudo chmod 600 /etc/ssl/localcerts/apache*
+5. sudo ls -la /etc/ssl/localcerts/
+6. sudo vim /etc/apache2/conf-available/ssl-params.conf
+
+```ADD THE FOLLOWING CONFIG TO **/etc/apache2/conf-available/ssl-params.conf**
+
+	SSLCipherSuite EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH
+	SSLProtocol All -SSLv2 -SSLv3 -TLSv1 -TLSv1.1
+	SSLHonorCipherOrder On
+
+	Header always set X-Frame-Options DENY
+	Header always set X-Content-Type-Options nosniff
+
+	SSLCompression off
+	SSLUseStapling on
+	SSLStaplingCache "shmcb:logs/stapling-cache(150000)"
+
+	SSLSessionTickets Off
+```
+7. sudo vim /etc/apache2/sites-available/default-ssl.conf
+
+```ADD THE FOLLOWING CONFIG TO **/etc/apache2/sites-available/default-ssl.conf**
+
+<IfModule mod_ssl.c>
+	<VirtualHost _default_:443>
+		ServerAdmin trahman@student.hive.fi
+		ServerName	10.11.199.12
+
+		DocumentRoot /var/www/html
+
+		ErrorLog ${APACHE_LOG_DIR}/error.log
+		CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+		SSLEngine on
+
+		SSLCertificateFile	/etc/ssl/localcerts/apache.pem
+		SSLCertificateKeyFile /etc/ssl/localcerts/apache.key
+
+		<FilesMatch "\.(cgi|shtml|phtml|php)$">
+				SSLOptions +StdEnvVars
+		</FilesMatch>
+		<Directory /usr/lib/cgi-bin>
+				SSLOptions +StdEnvVars
+		</Directory>
+
+	</VirtualHost>
+ </IfModule>
+```
+8. sudo vim /etc/apache2/sites-available/000-default.conf (REDIRECT YOUR IP)
+
+```ADD THE FOLLOWING CONFIG TO **/etc/apache2/sites-available/000-default.conf**
+<VirtualHost *:80>
+	ServerAdmin webmaster@localhost
+	DocumentRoot /var/www/html
+
+	Redirect permanent "/" "https://10.11.199.12/"
+
+	ErrorLog ${APACHE_LOG_DIR}/error.log
+	CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+ </VirtualHost>
+```
+9. Load the new configurations and make it working
+
+```
+	1. sudo a2enmod ssl <enter>
+	2. sudo a2enmod headers <enter>
+	3. sudo a2ensite default-ssl <enter>
+	4. sudo a2enconf ssl/params <enter>
+	5. systemctl reload apache2 <enter>
+```
+10. GO-TO a web_browser and type 10.11.199.12
+11. Congratulations "YOUR WEBSITE IS NOW VISIBLE WITH YOUR IP ADDRESS"
+
+### 💡 ***RESOURCES***
+	1. https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-apache-in-ubuntu-16-04
+
