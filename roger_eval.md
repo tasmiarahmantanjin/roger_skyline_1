@@ -7,6 +7,8 @@
 ```
 scp -P 50683 /Users/trahman/Desktop/roger-skyline-1/sudo_right_check.sh tasmia@10.11.199.12:/home/tasmia/sudo_right_check.sh
 ```
+	2. Check all the user: compgen -u
+	3. To check disk space: fdisk -l
 
 
 ## ⚡️ 1. TO LOGIN as non-root user with SUDO rights:
@@ -15,6 +17,9 @@ scp -P 50683 /Users/trahman/Desktop/roger-skyline-1/sudo_right_check.sh tasmia@1
 	2. sudo adduser evan
 	3. sudo adduser evan sudo
 	4. or edit **/etc/sudoers or **sudo visudo** and add: **evan ALL=(ALL:ALL) NOPASSWD:ALL**
+
+Create .ssh to debian and copy key from mac to debian:
+
 	5. sudo mkdir -p /home/evan/.ssh
 	6. sudo scp /home/tasmia/.ssh/authorized_keys /home/evan/.ssh/authorized_keys
 	7. sudo chown evan /home/evan/.ssh/authorized_keys
@@ -95,17 +100,35 @@ scp -P 50683 /Users/trahman/Desktop/roger-skyline-1/sudo_right_check.sh tasmia@1
 
 # WEB_PART
 
+## ⚡️ 12. TO TEST SSL CERTIFICATE:
 
-## ⚡️ 12. TO TEST SSL ON ALL SERVICES:
+	1. Go to web_browser type static IP
+	2. Show the certificate from the brouwser
+	3. sudo cat /etc/apache2/sites-available/default-ssl.conf
+	4. sudo cat /etc/apache2/conf-available/ssl-params.conf
+	5. sudo cat /etc/apache2/sites-available/000-default.conf
+	6. sudo systemctl status apache2
 
-
-## ⚡️ 12. TO TEST Check web package
+## ⚡️ 13. TO TEST Check web package
 
 	1. sudo apt list --installed | grep apache
 
-#  Deployment Parts
-
-## ⚡️ 12. TO TEST Check active configuartion
+## ⚡️ 14. TO TEST Check one_active configuartion
 
 	1. sudo cat /etc/apache2/sites-available/000-default.conf
-	2. 
+	2. sudo netstat -tulpn | grep LISTEN
+
+## ⚡️ 15. TO TEST IF WEB_ALLICATION IS WORKING
+
+	1. On a browser type: 10.11.199.12
+	2. See if my website is pops up or not
+
+#  Deployment Parts
+
+	1. Expalin how i did create SSL certificate and how did i 
+	deployed my website
+
+	2. Go to: sudo vim /etc/www/html/index.html file &
+	create a minor change on index.html file and go back
+	to web browser, refresh my static IP and see if
+	my changes works fine or not. 
