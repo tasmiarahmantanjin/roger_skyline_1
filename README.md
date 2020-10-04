@@ -187,7 +187,9 @@ This command will generate 2 files `id_rsa` and `id_rsa.pub`
 - **id_rsa**:  Our private key, should be keep safely, She can be crypted with a password.
 - **id_rsa.pub** Our private key, you have to transfer this one to the server.
 
-### Sources: https://www.linode.com/docs/security/authentication/use-public-key-authentication-with-ssh/#connect-to-the-remote-server
+### Sources:
+
+	https://www.linode.com/docs/security/authentication/use-public-key-authentication-with-ssh/#connect-to-the-remote-server
 
 2. To do that we can use the `ssh-copy-id` command
 
@@ -385,6 +387,7 @@ sudo systemctl disable syslog.service
 ```
 
 ### 💡 ***RESOURCES***
+
 	https://www.digitalocean.com/community/tutorials/how-to-use-systemctl-to-manage-systemd-services-and-units
 
 ⚡️ **TESTING**
