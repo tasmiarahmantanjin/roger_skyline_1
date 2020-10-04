@@ -1,5 +1,5 @@
 # roger-skyline-1
-This project, roger-skyline-1 let you install a Virtual Machine, discover the basics about SysAdmin and network administration as well as a lots of services used on a server machine. The main aim of this project is to familiarize us with the work of a sysadmin. I had to configure a linux distribution with some basics services like OpenSSH, Fail2Ban, a web server (apache2) etc..
+This project, roger-skyline-1 let you install a Virtual Machine, discover the basics about SysAdmin and network administration as well as a lots of services used on a server machine. The main aim of this project is to familiarize us with the work of a sysadmin. I had to configure a linux (debian) environment with some basics services like OpenSSH, Fail2Ban, a web server (apache2) etc..
 
 ## Summary <a id="summary"></a>
 
@@ -631,7 +631,7 @@ sudo chmod 755 update.sh
 10. GO-TO a web_browser and type 10.11.199.12
 11. Congratulations "YOUR WEBSITE IS NOW VISIBLE WITH YOUR IP ADDRESS"
 
-## 2. WEB_APPLICATION DELOYMENT TEST
+## 3. WEB_APPLICATION DELOYMENT TEST
 
 	1. Go to any browser
 	2. Type 10.11.199.12
@@ -645,4 +645,4 @@ sudo chmod 755 update.sh
 	create a minor change on index.html file and go back
 	to web browser, refresh my static IP and see if
 	my changes works fine or not. 
-	
+------
