@@ -435,8 +435,7 @@ sudo systemctl enable cron
 ```
 -------
 ### 💡 ***NOTE***
-	Don't forget to make your ~/mail.txt file !
-
+Crontab rules:
 			* * * * * command to be executed
 			- - - - -
 			| | | | |
