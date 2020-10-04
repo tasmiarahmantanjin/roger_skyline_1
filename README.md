@@ -435,6 +435,7 @@ sudo systemctl enable cron
 ```
 -------
 ### 💡 ***NOTE***
+```
 Crontab rules:
 			* * * * * command to be executed
 			- - - - -
@@ -444,6 +445,7 @@ Crontab rules:
 			| | --------- Day of month (1 - 31)
 			| ----------- Hour (0 - 23)
 			------------- Minute (0 - 59)
+```
 -------
 
 ## 13. Script that monitor all changes in /etc/crontab file
