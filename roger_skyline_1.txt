@@ -634,3 +634,10 @@ sudo chmod 755 update.sh
 ### 💡 ***RESOURCES***
 	1. https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-apache-in-ubuntu-16-04
 
+
+## 2. WEB_APPLICATION DELOYMENT TEST
+
+	1. Go to any browser
+	2. Type 10.11.199.12
+	3. You can now see a wonderfull website :)
+	
