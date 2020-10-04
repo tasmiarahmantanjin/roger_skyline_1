@@ -538,7 +538,7 @@ sudo chmod 755 update.sh
 
 	1. https://security.stackexchange.com/questions/112768/why-are-self-signed-certificates-not-trusted-and-is-there-a-way-to-make-them-tru
 	
-	2. 
+	2. https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-apache-in-ubuntu-16-04
 
 ## 1. Creating /var/www/html/index.html file
 
@@ -631,6 +631,18 @@ sudo chmod 755 update.sh
 10. GO-TO a web_browser and type 10.11.199.12
 11. Congratulations "YOUR WEBSITE IS NOW VISIBLE WITH YOUR IP ADDRESS"
 
-### 💡 ***RESOURCES***
-	1. https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-apache-in-ubuntu-16-04
+## 2. WEB_APPLICATION DELOYMENT TEST
 
+	1. Go to any browser
+	2. Type 10.11.199.12
+	3. You can now see a wonderfull website :)
+
+# Automated Deployment
+
+	1. Expalin to evaluator, how i did create SSL certificate and how did i deployed my website
+
+	2. Go to: sudo vim /etc/www/html/index.html file &
+	create a minor change on index.html file and go back
+	to web browser, refresh my static IP and see if
+	my changes works fine or not. 
+	
