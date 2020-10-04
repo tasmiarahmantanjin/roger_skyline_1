@@ -1,15 +1,21 @@
-# NETWORK & SECURITY PART
-
-## Usefull commands:
+# Usefull commands:
 
 	1. To transfer file from MAC to DEBIAN USER:
-
 ```
-scp -P 50683 /Users/trahman/Desktop/roger-skyline-1/sudo_right_check.sh tasmia@10.11.199.12:/home/tasmia/sudo_right_check.sh
+	scp -P 50683 /Users/trahman/Desktop/roger-skyline-1/sudo_right_check.sh tasmia@10.11.199.12:/home/tasmia/sudo_right_check.sh
 ```
 	2. Check all the user: compgen -u
-	3. To check disk space: fdisk -l
+---
 
+# VM PART
+
+	1. login to VM (user: tasmia, ps: 1234)
+	2. sudo apt list --installed
+	3. sudo fdisk -l
+	4. sudo apt-get update
+	5. sudo apt list --installed (to check docker, valgrand)
+
+# NETWORK & SECURITY PART
 
 ## ⚡️ 1. TO LOGIN as non-root user with SUDO rights:
 
@@ -58,7 +64,6 @@ Create .ssh to debian and copy key from mac to debian:
 
 	1. sudo ufw status verbose
 
-
 ## ⚡️ 7. TO CHECK DOS PROTECTION:
 
 	1.We can test if the new conf works with SlowLoris (an HTTP DDOS attack script)
@@ -93,11 +98,11 @@ Create .ssh to debian and copy key from mac to debian:
 
 	1. sudo cat ~/crontab_monitor.sh
 	2. Go to: vim /etc/crontab
-	3. Add: anything to /etc/crontab or: touch /etc/crontab
+	3. Add anything to: /etc/crontab or: touch /etc/crontab
 	4. Run: bash cron_monitor.sh
 	5. write: mail -u root
 	6. or You can check mail in: cat /var/mail/root
-
+----
 # WEB_PART
 
 ## ⚡️ 12. TO TEST SSL CERTIFICATE:
@@ -122,7 +127,7 @@ Create .ssh to debian and copy key from mac to debian:
 
 	1. On a browser type: 10.11.199.12
 	2. See if my website is pops up or not
-
+----
 #  Deployment Parts
 
 	1. Expalin how i did create SSL certificate and how did i 
@@ -131,4 +136,5 @@ Create .ssh to debian and copy key from mac to debian:
 	2. Go to: sudo vim /etc/www/html/index.html file &
 	create a minor change on index.html file and go back
 	to web browser, refresh my static IP and see if
-	my changes works fine or not. 
+	my changes works fine or not.
+----
