@@ -12,8 +12,9 @@
 	1. login to VM (user: tasmia, ps: 1234)
 	2. sudo apt list --installed
 	3. sudo fdisk -l
-	4. sudo apt-get update
-	5. sudo apt list --installed (to check docker, valgrand)
+	4. sudo apt update
+	5. sudo apt upgrade
+	6. sudo apt list --installed (to check docker, valgrand)
 
 # NETWORK & SECURITY PART
 
@@ -71,10 +72,13 @@ Create .ssh to debian and copy key from mac to debian:
 	3. install SlowLoris: git clone https://github.com/gkbrk/slowloris.git slowloris
 	4. go to: cd slowlaries directory (MAC TERMINAL)
 	5. python slowloris.py 10.11.199.12 (in the MAC TERMINAL)
-	6. Check fail2ban.log that ip is banned from:  sudo tail -F /var/log/fail2ban.log
-	7. or iptables --list | head ::::to check if its baned or not
-	8. sudo service fail2ban status : TO CHECK IF fail2ban is installed or not
-	9. or service --status-all
+	6. sudo fail2ban-client status http-get-dos (TO CHECK IP BAN)
+	7. fail2ban-client set http-get-dos unbanip 10.11.5.18 (:To UNBAN IP)
+
+	8. or Check fail2ban.log that ip is banned from:  sudo tail -F /var/log/fail2ban.log
+	9.  or iptables --list | head ::::to check if its baned or not
+	10. sudo service fail2ban status : TO CHECK IF fail2ban is installed or not
+	11. or service --status-all
 
 ## ⚡️ 8. TO Check OPEN PORT:
 
@@ -85,7 +89,6 @@ Create .ssh to debian and copy key from mac to debian:
 
 	1. sudo systemctl list-unit-files --type service | grep enabled
 	2. sudo service --status-all (EXTRA)
-
 
 ## ⚡️ 10. TO CHECK SCRIPTS:
 
@@ -133,8 +136,9 @@ Create .ssh to debian and copy key from mac to debian:
 	1. Expalin how i did create SSL certificate and how did i 
 	deployed my website
 
-	2. Go to: sudo vim /etc/www/html/index.html file &
+	2. Go to: sudo vim /var/www/html/index.html file &
 	create a minor change on index.html file and go back
-	to web browser, refresh my static IP and see if
+	to web browser,
+	3. Refresh my static IP and see if
 	my changes works fine or not.
 ----

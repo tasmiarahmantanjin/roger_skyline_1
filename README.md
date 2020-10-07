@@ -12,11 +12,12 @@ This project, roger-skyline-1 let you install a Virtual Machine, discover the ba
 	- [4. Configure SUDO <a id="sudo"></a>](#4-configure-sudo-)
 	- [5. Setup a static IP <a id="staticIP"></a>](#5-setup-a-static-ip-)
 		- [💡 ***NOTE***](#-note)
-	- [6. Change SSH default Port](#6-change-ssh-default-port)
+	- [6. Change SSH default Port (50683)](#6-change-ssh-default-port-50683)
 		- [💡 ***NOTE***](#-note-1)
 	- [7. Setup SSH access with publickeys](#7-setup-ssh-access-with-publickeys)
-	- [8. Setup Firewall with UFW. <a id="ufw"></a>](#8-setup-firewall-with-ufw-)
 		- [Sources:](#sources)
+	- [8. Setup Firewall with UFW. <a id="ufw"></a>](#8-setup-firewall-with-ufw-)
+		- [Sources:](#sources-1)
 	- [9. Setup DOS protection with fail2ban. <a id="fail2ban"></a>](#9-setup-dos-protection-with-fail2ban-)
 		- [💡 ***NOTE***](#-note-2)
 	- [10. Setting up Protection against port scans. <a id="scanSecure"></a>](#10-setting-up-protection-against-port-scans-)
@@ -31,7 +32,8 @@ This project, roger-skyline-1 let you install a Virtual Machine, discover the ba
 		- [💡 ***RESOURCES***](#-resources-1)
 	- [1. Creating /var/www/html/index.html file](#1-creating-varwwwhtmlindexhtml-file)
 	- [2. Creating SSL CERTIFICATE](#2-creating-ssl-certificate)
-		- [💡 ***RESOURCES***](#-resources-2)
+	- [3. WEB_APPLICATION DELOYMENT TEST](#3-web_application-deloyment-test)
+- [Automated Deployment](#automated-deployment)
 
 # Network and Security Part
 
@@ -629,7 +631,7 @@ sudo chmod 755 update.sh
 	1. sudo a2enmod ssl <enter>
 	2. sudo a2enmod headers <enter>
 	3. sudo a2ensite default-ssl <enter>
-	4. sudo a2enconf ssl/params <enter>
+	4. sudo a2enconf ssl-params <enter>
 	5. systemctl reload apache2 <enter>
 ```
 10. GO-TO a web_browser and type 10.11.199.12
